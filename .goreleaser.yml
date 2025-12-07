@@ -1,0 +1,49 @@
+before:
+  hooks:
+    - go mod tidy
+
+builds:
+- main: cmd/karmaecho-client/main.go
+  binary: karmaecho-client
+  id: karmaecho-client
+
+  env:
+  - CGO_ENABLED=0
+
+  goos: [windows,linux,darwin]
+  goarch: [amd64,386,arm,arm64]
+
+- main: cmd/karmaecho-server/main.go
+  binary: karmaecho-server
+  id: karmaecho-server
+
+  env:
+  - CGO_ENABLED=0
+
+  goos: [windows,linux,darwin]
+  goarch: [amd64,386,arm,arm64]
+
+archives:
+- format: zip
+  id: client
+  builds: [karmaecho-client]
+  name_template: '{{ .Binary }}_{{ .Version }}_{{ if eq .Os "darwin" }}macOS{{ else }}{{ .Os }}{{ end }}_{{ .Arch }}'
+
+- format: zip
+  id: server
+  builds: [karmaecho-server]
+  name_template: '{{ .Binary }}_{{ .Version }}_{{ if eq .Os "darwin" }}macOS{{ else }}{{ .Os }}{{ end }}_{{ .Arch }}'
+
+checksum:
+  algorithm: sha256
+
+announce:
+  slack:
+    enabled: true
+    channel: '#release'
+    username: GoReleaser
+    message_template: 'New Release: {{ .ProjectName }} {{.Tag}} is published! Check it out at {{ .ReleaseURL }}'
+
+  discord:
+    enabled: true
+    message_template: '**New Release: {{ .ProjectName }} {{.Tag}}** is published! Check it out at {{ .ReleaseURL }}'

@@ -1,0 +1,35 @@
+.idea
+.vscode
+.devcontainer
+
+cmd/interactsh-server/interactsh-server
+cmd/interactsh-client/interactsh-client
+cmd/karmaecho-server/karmaecho-server
+cmd/karmaecho-client/karmaecho-client
+*.exe
+dist/
+
+# Build artifacts
+build/
+*.out
+*.test
+
+# Binaries in root directory
+/karmaecho-server
+/karmaecho-client
+karmaecho-*
+
+# OS files
+.DS_Store
+Thumbs.db
+Icon
+Icon?
+
+# Empty or temporary assets
+assets/*.png
+assets/*.jpg
+assets/*.jpeg
+
+# Credentials
+*.ini
+secrets/.github/workflows/
