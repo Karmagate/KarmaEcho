@@ -74,7 +74,14 @@ func NewHTTPServer(options *Options) (*HTTPServer, error) {
 	server.websocketHandler = NewWebSocketHandler(options)
 
 	router := &http.ServeMux{}
-	router.Handle("/", server.logger(server.corsMiddleware(http.HandlerFunc(server.defaultHandler))))
+	defaultChain := server.logger(server.corsMiddleware(http.HandlerFunc(server.defaultHandler)))
+	router.Handle("/", http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		if strings.EqualFold(r.Header.Get("Upgrade"), "websocket") {
+			server.websocketHandler.HandleWebSocket(w, r)
+			return
+		}
+		defaultChain.ServeHTTP(w, r)
+	}))
 	router.Handle("/register", server.corsMiddleware(server.authMiddleware(http.HandlerFunc(server.registerHandler))))
 	router.Handle("/deregister", server.corsMiddleware(server.authMiddleware(http.HandlerFunc(server.deregisterHandler))))
 	router.Handle("/poll", server.corsMiddleware(server.authMiddleware(http.HandlerFunc(server.pollHandler))))

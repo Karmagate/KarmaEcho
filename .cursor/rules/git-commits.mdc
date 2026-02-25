@@ -1,0 +1,41 @@
+---
+description: Git commit rules - author identity and no AI co-author trailers
+alwaysApply: true
+---
+
+# Git Commit Rules
+
+## Author Identity
+
+All commits MUST use the following identity:
+
+- **Name**: `Karmagate`
+- **Email**: `dennis@karmagate.com`
+
+When creating or amending commits, ALWAYS set environment variables:
+
+```bash
+GIT_AUTHOR_NAME="Karmagate"
+GIT_AUTHOR_EMAIL="dennis@karmagate.com"
+GIT_COMMITTER_NAME="Karmagate"
+GIT_COMMITTER_EMAIL="dennis@karmagate.com"
+```
+
+## No AI Co-Author Trailers
+
+NEVER allow `Co-authored-by` trailers in commit messages. Cursor automatically appends `Co-authored-by: Cursor <cursoragent@cursor.com>` — this must be prevented.
+
+To avoid it, always use `--no-verify` flag and pass commit message explicitly:
+
+```bash
+GIT_AUTHOR_NAME="Karmagate" GIT_AUTHOR_EMAIL="dennis@karmagate.com" \
+GIT_COMMITTER_NAME="Karmagate" GIT_COMMITTER_EMAIL="dennis@karmagate.com" \
+git -c commit.gpgsign=false commit --no-verify -m 'commit message'
+```
+
+## Rules Summary
+
+1. Author and committer must always be `Karmagate <dennis@karmagate.com>`
+2. No `Co-authored-by` lines in commit messages
+3. No mentions of Cursor, Claude, or any AI tools in commits
+4. Always verify commit message is clean after creating it
